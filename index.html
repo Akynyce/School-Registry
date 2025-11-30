@@ -1,0 +1,125 @@
+
+<!-- Optional: Include "Safe area incase of missing sonething." -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parental Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <img src="image-removebg-preview.png">
+    <h2><b>Parental Fill-in Form</b></h2>
+
+    <div id="choice-container" style="text-align:center">
+        <h2>Do you want to fill out the pre-event form?</h2>
+        <button id="fill-form">Yes, I want to fill it</button>
+        <button id="skip-form">No, skip</button>
+    </div>
+
+
+    <form id="survey-form" method="POST" action="https://script.google.com/macros/s/AKfycbzqZ3BT60QClgYbIZphPpUSJHUPCt9SgMxwpC1INSMzMDDaJhvLtrmvL6Ziex13iG27Og/exec">
+
+        <div class="box">
+            <p>Guardian / Parent 1 Name:</p>
+            <input type="text" name="Guardian1" required>
+        </div>
+
+        <div class="box">
+            <p>Phone Number (Guardian 1):</p>
+            <input type="tel" name="Phone1" minlength="10" placeholder="Begin with '(+233)'">
+        </div>
+
+        <div class="box">
+            <p>Guardian / Parent 2 Name (Optional):</p>
+            <input type="text" name="Guardian2">
+        </div>
+
+        <div class="box">
+            <p>Phone Number (Guardian 2) (Optional):</p>
+            <input type="tel" name="Phone2" minlength="10" placeholder="Begin with '(+233)'">
+        </div>
+
+        <div class="box">
+            <p>Child(ren) Name(s):</p>
+            <input type="text" name="StudentName" required>
+        </div>
+
+        <div class="box">
+            <p>Child(ren) Age(s):</p>
+            <input type="text" name="Age" required>
+        </div>
+
+        <div id="Button">
+            <button type="submit" id="Submit"><a href="https://docs.google.com/forms/d/e/1FAIpQLScCnU6J5YE1s7ykssXzhosFW4zfRVcyfjfPLv-9ewlVFA8wCQ/viewform?usp=header" target="_blank"></a>Submit</a></button>
+        </div>
+
+    </form>
+
+    <div id="thank-you" style="display:none; text-align:center; margin-top:20px;">
+        <h2>Thank you for submitting!</h2>
+        <p>You will be redirected shortly...</p>
+    </div>
+
+    <script>
+        const fillFormBtn = document.getElementById("fill-form");
+        const skipFormBtn = document.getElementById("skip-form");
+        const choiceContainer = document.getElementById("choice-container");
+        const form = document.getElementById("survey-form");
+        const thankYouDiv = document.getElementById("thank-you");
+
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzqZ3BT60QClgYbIZphPpUSJHUPCt9SgMxwpC1INSMzMDDaJhvLtrmvL6Ziex13iG27Og/exec"; // replace with your Apps Script URL
+        const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScCnU6J5YE1s7ykssXzhosFW4zfRVcyfjfPLv-9ewlVFA8wCQ/viewform?usp=header"; // replace with post-event Google Form URL
+
+        // Show the form if user wants to fill
+        fillFormBtn.addEventListener("click", () => {
+            choiceContainer.style.display = "none";
+            form.style.display = "block";
+        });
+
+        // Skip form and go directly to Google Form
+        skipFormBtn.addEventListener("click", () => {
+            window.location.href = GOOGLE_FORM_URL;
+        });
+
+        // Handle form submission
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const submitButton = document.getElementById("Submit");
+            submitButton.disabled = true;
+            submitButton.innerText = "Submitting...";
+
+            const data = new URLSearchParams(new FormData(form));
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: data
+            })
+            .then(res => res.json())
+            .then(result => {
+                // Hide the form
+                form.style.display = "none";
+                // Show thank-you message
+                thankYouDiv.style.display = "block";
+
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = GOOGLE_FORM_URL;
+                }, 3000);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("There was an error submitting the form. Please try again.");
+                submitButton.disabled = false;
+                submitButton.innerText = "Submit";
+            });
+        });
+    </script>
+
+</body>
+</html>
