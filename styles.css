@@ -25,11 +25,18 @@ body {
     margin-block: 10px;
 }
 
-
-
 h2 {
     margin-top: 20px;
     margin-bottom: 10px;
+}
+
+h2, #choice-container, #thank-you{
+    text-align: center;
+}
+
+#thank-you{
+    display: none;
+    margin-top: 20px;
 }
 
 p {
